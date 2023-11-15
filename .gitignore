@@ -31,6 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+<<<<<<< HEAD
 
 ### Service Cloud ###
 magicqoven-key_service.json
+=======
+>>>>>>> 55f95e69459e65af9a5229926d0592aa3d415c9a
