@@ -9,3 +9,6 @@ Logré hacer una consulta a la BQ sin que se de la web, no lo entiendo del todo 
 11/14 : Intenté con pytrends, muy bueno pero creo que no cumpliría con los requerimientos.
 Tengo ganas de no continuar más, creo que me está superando. 
 Estaba perdiendo el tiempo... hay un API, por supuesto que hay un API! ¿Cómo se me pasa eso? ahora a darle a ver.
+
+11/15 : No tengo una sola pregunta para el AMA, debo seguir a ver si almenos logro la conexión. 
+No entiendo mucho de la AMA pero es cierto en como ahora el nivel se subió por el nivel de los LLM y esto de los GPTs.
