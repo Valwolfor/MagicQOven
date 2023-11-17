@@ -61,7 +61,4 @@ public class BigQueryConfig {
         factoryBean.setAsyncExecutor(null);
         return factoryBean;
     }
-
-    /** Spring Integration gateway which allows sending data to load to BigQuery through a channel. */
-
 }

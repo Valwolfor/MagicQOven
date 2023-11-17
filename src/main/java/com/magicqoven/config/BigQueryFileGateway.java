@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 
 
 /** Spring Integration gateway which allows sending data to load to BigQuery through a channel. */
+
 @MessagingGateway
 public interface BigQueryFileGateway {
     CompletableFuture<Job> writeToBigQueryTable(

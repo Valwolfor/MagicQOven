@@ -12,3 +12,8 @@ Estaba perdiendo el tiempo... hay un API, por supuesto que hay un API! ¿Cómo s
 
 11/15 : No tengo una sola pregunta para el AMA, debo seguir a ver si almenos logro la conexión. 
 No entiendo mucho de la AMA pero es cierto en como ahora el nivel se subió por el nivel de los LLM y esto de los GPTs.
+Logre generar la consulta, ahora tengo que hacer con Spring.
+
+11/16 : Karen da una bellas palabras de aliento, me siento mal porque creo que la decepcionaré, creo que me tiene cierta esperanza
+Esto de Docker es más difícil de lo que pensaba y de nuevo ando bloqueado, además con una gripa falta
+que me acaba de empezar. 

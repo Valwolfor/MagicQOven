@@ -1,1 +1,47 @@
+version: '3.8'
 services:
+  magicqoven:
+    build:
+      context: .
+    ports:
+      - "8085:8085" # Puerto para la aplicación Spring
+    environment:
+      - SERVER_PORT=8085
+      - MYSQL_URL=jdbc:mysql://mysqlserver:3306/magic_qoven # Cambia la URL según la configuración
+    depends_on:
+      - mysqlserver
+      - javaapp
+
+
+  mysqlserver:
+    image: mysql:8.0.33
+    ports:
+      - "3306:3306" # Puerto para MySQL
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_USER=magic_learner
+      - MYSQL_PASSWORD=abrakadabra777
+      - MYSQL_DATABASE=magicqoven
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  javaapp:
+    image: java-oven
+    ports:
+      - "8080:8080" # Puerto para la aplicación Spring
+    volumes:
+      - ./:/app
+#    command: java -jar /magicQoven/target/magicQoven-0.0.1-SNAPSHOT.war # Ruta al archivo WAR generado
+
+
+  reactapp:
+    image: node:latest
+    ports:
+      - "9000:9000" # Puerto para la aplicación React
+    working_dir: /app
+    volumes:
+      - ./frontend:/app # Ruta local a la carpeta de React
+    command: npm start # O el comando necesario para iniciar la app React
+
+volumes:
+  mysql_data:
