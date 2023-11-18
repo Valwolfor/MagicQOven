@@ -1,56 +1,109 @@
 package com.magicqoven.service.impl;
 
 import com.google.cloud.bigquery.*;
+import com.google.cloud.spring.bigquery.core.BigQueryTemplate;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.magicqoven.config.BigQueryFileGateway;
 import com.magicqoven.service.inter.BigQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BigQueryServiceImpl implements BigQueryService {
 
-    BigQuery bigQuery;
+
+    private final BigQueryFileGateway bigQueryFileGateway;
+    private final BigQueryTemplate bigQueryTemplate;
+    private final BigQuery bigQuery;
+    private final String datasetName;
 
     @Autowired
-    public BigQueryServiceImpl(BigQuery bigQuery) {
+    public BigQueryServiceImpl(BigQueryFileGateway bigQueryFileGateway,
+                               BigQueryTemplate bigQueryTemplate, BigQuery bigQuery, @Value("${spring.cloud.gcp.credentials.location}") String name) {
+        this.bigQueryFileGateway = bigQueryFileGateway;
+        this.bigQueryTemplate = bigQueryTemplate;
+        this.datasetName = name;
         this.bigQuery = bigQuery;
     }
 
     @Override
-    public String executeQuery(String query) throws InterruptedException {
-        try {
-            query = "SELECT\n" +
-                    "    refresh_date AS Day,\n" +
-                    "    term AS Top_Term,\n" +
-                    "    -- These search terms are in the top 25 in the US each day.\n" +
-                    "    rank,\n" +
-                    "    score,\n" +
-                    "    dma_id,\n" +
-                    "    dma_name,\n" +
-//                    "    percent_gain,\n" +
-                    "FROM `bigquery-public-data.google_trends.top_rising_terms`\n" +
-                    "WHERE\n" +
-                    "        rank = 1\n" +
-                    "  -- Choose only the top term each day.\n" +
-                    "  AND refresh_date >= DATE_SUB(CURRENT_DATE(), INTERVAL 2 WEEK)\n" +
-                    "  LIMIT 10";// +
-//                    "GROUP BY Day, Top_Term, rank\n" +
-//                    "ORDER BY Day DESC"; // Tu consulta aquí
-            QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build();
+    public String executeQuery(String query) throws InterruptedException, BigQueryException {
 
+        try {
+            QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build();
             TableResult result = bigQuery.query(queryConfig);
 
-            // Procesar los resultados aquí
-            StringBuilder output = new StringBuilder();
-            for (com.google.cloud.bigquery.FieldValueList row : result.iterateAll()) {
-                output.append(row.toString()).append("\n");
+            List<JsonObject> jsonList = new ArrayList<>();
+
+            for (FieldValueList fieldValues : result.iterateAll()) {
+                Integer fieldName = 1;
+                JsonObject jsonObject = new JsonObject();
+                for (FieldValue fieldValue : fieldValues) {
+
+                    String value = fieldValue.getValue().toString();
+                    jsonObject.addProperty(fieldName.toString(), value);
+                    fieldName++;
+                }
+                jsonList.add(jsonObject);
             }
 
-            return "Query executed! Resultados: " + output.toString();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            return gson.toJson(jsonList);
+
         } catch (BigQueryException e) {
-            return "Error al ejecutar la consulta: " + e.getMessage();
+            throw new BigQueryException(e.getErrors());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+//                QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build();
+//
+//                TableResult result = bigQuery.query(queryConfig);
+//
+//                // Procesar los resultados aquí
+//                StringBuilder output = new StringBuilder();
+//                for (com.google.cloud.bigquery.FieldValueList row : result.iterateAll()) {
+//                    output.append(row.toString()).append("\n");
+//                }
+//
+//                List<FieldValue> firstRow = results.get(0); // Obtén la primera fila de resultados
+//
+//// Itera sobre los FieldValue para encontrar la clave 'refresh_date'
+//                for (FieldValue fieldValue : firstRow) {
+//                    if ("refresh_date".equals(fieldValue.getAttribute())) {
+//                        System.out.println("Valor de refresh_date: " + fieldValue.getValue());
+//                        break; // Se encontró el valor, salimos del bucle
+//                    }
+//
+//                    return result.iterateAll().toString();
+//                } catch(BigQueryException e){
+//                    throw new BigQueryException(e.getErrors());
+//                } catch(InterruptedException e){
+//                    throw new RuntimeException(e);
+//                }
     }
+
+//    private String parseTableResultToJson(TableResult tableResult) {
+//        List<JsonObject> jsonList = new ArrayList<>();
+//
+//        for (FieldValueList row : tableResult.iterateAll()) {
+//            JsonObject jsonObject = new JsonObject();
+//            for (FieldValueList.FieldValue fieldValue : row) {
+//                String fieldName = fieldValue.getName();
+//                String value = fieldValue.getValue().toString();
+//                jsonObject.addProperty(fieldName, value);
+//            }
+//            jsonList.add(jsonObject);
+//        }
+//
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        return gson.toJson(jsonList);
+//    }
+
 }
 

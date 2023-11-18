@@ -22,4 +22,7 @@ La verdad tenía muchas ganas de rendirme y que no iba a alcanzar.
 Tengo dudas sobre lo de los estados del Dockerfile, tal vez debería manejarlo mejor.
 ME acabo de dar cuenta que estaba haciendo algo innecesario.
 
-11/17 : Bueno, a darle que estoy quedado y la gripa no baja.
+11/17 : Bueno, a darle que estoy quedado y la gripa no baja. No podido resolver lo de TableResult, será necesario las key?
+no sé.
+
+11/18 : ya ni sé que pensar, parece que no alcanzaré. Pero bueno vamos darle.
