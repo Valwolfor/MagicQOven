@@ -35,75 +35,39 @@ public class BigQueryServiceImpl implements BigQueryService {
     @Override
     public String executeQuery(String query) throws InterruptedException, BigQueryException {
 
+        TableResult result;
         try {
             QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build();
-            TableResult result = bigQuery.query(queryConfig);
+            result = bigQuery.query(queryConfig);
 
-            List<JsonObject> jsonList = new ArrayList<>();
-
-            for (FieldValueList fieldValues : result.iterateAll()) {
-                Integer fieldName = 1;
-                JsonObject jsonObject = new JsonObject();
-                for (FieldValue fieldValue : fieldValues) {
-
-                    String value = fieldValue.getValue().toString();
-                    jsonObject.addProperty(fieldName.toString(), value);
-                    fieldName++;
-                }
-                jsonList.add(jsonObject);
-            }
-
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            return gson.toJson(jsonList);
-
+            return parseTableResultToJson(result);
         } catch (BigQueryException e) {
             throw new BigQueryException(e.getErrors());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-//                QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build();
-//
-//                TableResult result = bigQuery.query(queryConfig);
-//
-//                // Procesar los resultados aquí
-//                StringBuilder output = new StringBuilder();
-//                for (com.google.cloud.bigquery.FieldValueList row : result.iterateAll()) {
-//                    output.append(row.toString()).append("\n");
-//                }
-//
-//                List<FieldValue> firstRow = results.get(0); // Obtén la primera fila de resultados
-//
-//// Itera sobre los FieldValue para encontrar la clave 'refresh_date'
-//                for (FieldValue fieldValue : firstRow) {
-//                    if ("refresh_date".equals(fieldValue.getAttribute())) {
-//                        System.out.println("Valor de refresh_date: " + fieldValue.getValue());
-//                        break; // Se encontró el valor, salimos del bucle
-//                    }
-//
-//                    return result.iterateAll().toString();
-//                } catch(BigQueryException e){
-//                    throw new BigQueryException(e.getErrors());
-//                } catch(InterruptedException e){
-//                    throw new RuntimeException(e);
-//                }
     }
 
-//    private String parseTableResultToJson(TableResult tableResult) {
-//        List<JsonObject> jsonList = new ArrayList<>();
-//
-//        for (FieldValueList row : tableResult.iterateAll()) {
-//            JsonObject jsonObject = new JsonObject();
-//            for (FieldValueList.FieldValue fieldValue : row) {
-//                String fieldName = fieldValue.getName();
-//                String value = fieldValue.getValue().toString();
-//                jsonObject.addProperty(fieldName, value);
-//            }
-//            jsonList.add(jsonObject);
-//        }
-//
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        return gson.toJson(jsonList);
-//    }
+    private String parseTableResultToJson(TableResult result) {
+        FieldList fields = result.getSchema().getFields();
 
+        List<JsonObject> jsonList = new ArrayList<>();
+
+        for (FieldValueList fieldValues : result.iterateAll()) {
+
+            JsonObject jsonObject = new JsonObject();
+            for (int i = 0; i < fieldValues.size(); i++) {
+                Field fieldName = fields.get(i);
+                FieldValue fieldValue = fieldValues.get(i);
+                String value = fieldValue.getValue().toString();
+                jsonObject.addProperty(fieldName.getName(), value);
+            }
+            jsonList.add(jsonObject);
+        }
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(jsonList);
+    }
 }
+
 
