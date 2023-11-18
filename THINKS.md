@@ -17,3 +17,9 @@ Logre generar la consulta, ahora tengo que hacer con Spring.
 11/16 : Karen da una bellas palabras de aliento, me siento mal porque creo que la decepcionaré, creo que me tiene cierta esperanza
 Esto de Docker es más difícil de lo que pensaba y de nuevo ando bloqueado, además con una gripa falta
 que me acaba de empezar. 
+Pude terminar lo de docker y funciona!!. Es hermoso. Vamos a intentarlos con github
+La verdad tenía muchas ganas de rendirme y que no iba a alcanzar.
+Tengo dudas sobre lo de los estados del Dockerfile, tal vez debería manejarlo mejor.
+ME acabo de dar cuenta que estaba haciendo algo innecesario.
+
+11/17 : Bueno, a darle que estoy quedado y la gripa no baja.

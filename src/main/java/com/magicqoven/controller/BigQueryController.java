@@ -62,10 +62,7 @@ public class BigQueryController {
     public void init() {
         System.out.println("Dataset Name: " + this.datasetName);
     }
-    @GetMapping("/")
-    public String prueba(){
-        return "Funciona";
-    }
+
 
     @GetMapping("/query")
     public String executeQuery() throws InterruptedException {
