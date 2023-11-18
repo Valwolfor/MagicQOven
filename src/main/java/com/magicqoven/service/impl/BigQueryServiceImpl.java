@@ -6,13 +6,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.magicqoven.config.BigQueryFileGateway;
+import com.magicqoven.entity.DTO.QueryParameters;
 import com.magicqoven.service.inter.BigQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 @Service
 public class BigQueryServiceImpl implements BigQueryService {
@@ -46,6 +50,69 @@ public class BigQueryServiceImpl implements BigQueryService {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+    @Override
+    public String findTopTermsDynamically(QueryParameters parameters)
+            throws InterruptedException {
+
+        QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(buildQuery(parameters)).build();
+
+        TableResult result = bigQuery.query(queryConfig);
+
+        return parseTableResultToJson(result);
+    }
+
+    private String buildQuery(QueryParameters parameters) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT ");
+
+        queryBuilder.append(String.join(",", parameters.getSelectedFields()));
+
+        queryBuilder.append(" FROM `bigquery-public-data.google_trends.top_terms`");
+
+        if (!parameters.getFilters().isEmpty()) {
+            queryBuilder.append(" WHERE ");
+            List<String> filterConditions = new ArrayList<>();
+            parameters.getFilters().forEach((key, filterUnit) -> {
+                String condition;
+                System.out.println(filterUnit.getIsInt());
+                if (filterUnit.getIsInt().equals("true")) {
+                    condition = filterUnit.getField() + " " +
+                            filterUnit.getOperator() + " " +
+                            Integer.parseInt(filterUnit.getOperant());
+                } else {
+                    condition = filterUnit.getField() + " " +
+                            filterUnit.getOperator() + " '" +
+                            filterUnit.getOperant() + "'";
+                }
+
+                filterConditions.add(condition);
+            });
+
+            if (!filterConditions.isEmpty()) {
+                if (!parameters.getSelectedOperators().isEmpty()) {
+                    StringBuilder groupedConditions = new StringBuilder();
+                    for (String condition : filterConditions) {
+                        groupedConditions.append(condition);
+                        if (!parameters.getSelectedOperators().isEmpty()) {
+                            groupedConditions.append(" ").append(parameters.getSelectedOperators().poll()).append(" ");
+                        }
+                    }
+                    queryBuilder.append(" ").append(groupedConditions);
+                } else {
+                    queryBuilder.append(" ").append(String.join(" AND ", filterConditions));
+                }
+            }
+        }
+
+        if (parameters.getSortField() != null) {
+            queryBuilder.append(" ORDER BY ")
+                    .append(parameters.getSortField()).append(" ").append(parameters.getSortDirection());
+        }
+
+        queryBuilder.append(" LIMIT ").append(parameters.getLimit());
+        String query = queryBuilder.toString();
+        System.out.println(query);
+        return query;
     }
 
     private String parseTableResultToJson(TableResult result) {
