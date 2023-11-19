@@ -49,11 +49,11 @@ public class BigQueryServiceImpl implements BigQueryService {
     @Override
     public String findTopTermsDynamically(QueryParameters parameters)
             throws InterruptedException {
-
-        QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(buildQuery(parameters)).build();
+        String query = buildQuery(parameters);
+        QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build();
 
         TableResult result = bigQuery.query(queryConfig);
-
+        System.out.println(query);
         return parseTableResultToJson(result);
     }
 
@@ -63,9 +63,10 @@ public class BigQueryServiceImpl implements BigQueryService {
 
         if (!parameters.getGroupedFields().isEmpty()) {
             query = selectBuiderGrouped(parameters, queryBuilder)
-                    .append(" FROM `bigquery-public-data.google_trends.top_terms`")
+                    .append(" FROM `bigquery-public-data.google_trends.top_rising_terms`")
                     .append(whereFiltersBuilder(parameters))
                     .append(groupByBuilder(parameters))
+                    .append(orderByBuilder(parameters))
                     .append(limitBuilder(parameters)).toString();
         } else {
             queryBuilder.append("SELECT ");
@@ -136,7 +137,6 @@ public class BigQueryServiceImpl implements BigQueryService {
                 }
             }
         }
-        System.out.println(queryBuilder.toString());
         return queryBuilder.toString();
     }
 
@@ -164,9 +164,8 @@ public class BigQueryServiceImpl implements BigQueryService {
         StringBuilder queryBuilder = new StringBuilder();
 
         queryBuilder.append(" LIMIT ").append(parameters.getLimit());
-        String query = queryBuilder.toString();
 
-        return query;
+        return queryBuilder.toString();
     }
 
     private String parseTableResultToJson(TableResult result) {

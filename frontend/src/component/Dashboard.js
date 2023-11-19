@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import BarChart from './BarChart'; // Ruta a tu componente BarChart
+import BarChart from './BarChart';
+import LineChart from "./LineChart";
+import DoughnutChart from "./DoughnutChart";
+import DoughnutTermsChart from "./DoughnutTermsChart";
 
 
 const Dashboard = () => {
@@ -11,22 +14,22 @@ const Dashboard = () => {
         const password = 'abrakadabra777';
         const queryParameters = {
             filters: {
-                "1": {
+                1: {
                     field: "score",
                     operator: ">",
                     isInt: "true",
-                    operant: "15"
+                    operant: "10"
                 },
-                "2": {
+                2: {
                     field: "score",
                     operator: "<",
                     isInt: "true",
-                    operant: "50"
+                    operant: "35"
                 }
             },
             selectedFields: ["dma_id", "dma_name", "term", "week", "score", "rank", "refresh_date"],
-            sortField: "score",
-            sortDirection: "DESC",
+            sortField: "week",
+            sortDirection: "ASC",
             selectedOperators: ["AND"],
             groupedFields: ["dma_name"],
             limit: 100
@@ -76,7 +79,9 @@ const Dashboard = () => {
 
             </div>
             {chartData.length > 0 && <BarChart data={chartData}/>}
-            {/* Puedes colocar otros componentes, texto, etc., según tu diseño */}
+            {chartData.length > 0 && <LineChart data={chartData}/>}
+            {chartData.length > 0 && <DoughnutChart data={chartData}/>}
+            {chartData.length > 0 && <DoughnutTermsChart data={chartData}/>}
         </div>
     );
 };
