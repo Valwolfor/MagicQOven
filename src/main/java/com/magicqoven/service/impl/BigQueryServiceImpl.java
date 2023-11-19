@@ -51,6 +51,7 @@ public class BigQueryServiceImpl implements BigQueryService {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public String findTopTermsDynamically(QueryParameters parameters)
             throws InterruptedException {
@@ -63,18 +64,53 @@ public class BigQueryServiceImpl implements BigQueryService {
     }
 
     private String buildQuery(QueryParameters parameters) {
-        StringBuilder queryBuilder = new StringBuilder("SELECT ");
+        StringBuilder queryBuilder = new StringBuilder();
+        String query;
 
-        queryBuilder.append(String.join(",", parameters.getSelectedFields()));
+        if (!parameters.getGroupedFields().isEmpty()) {
+            query = selectBuiderGrouped(parameters, queryBuilder)
+                    .append(" FROM `bigquery-public-data.google_trends.top_terms`")
+                    .append(whereFiltersBuilder(parameters))
+                    .append(groupByBuilder(parameters))
+                    .append(limitBuilder(parameters)).toString();
+        } else {
+            queryBuilder.append("SELECT ");
+            query = queryBuilder.append(String.join(", ", parameters.getSelectedFields()))
+                    .append(" FROM `bigquery-public-data.google_trends.top_terms`")
+                    .append(whereFiltersBuilder(parameters))
+                    .append(orderByBuilder(parameters))
+                    .append(limitBuilder(parameters)).toString();
+        }
+        return query;
+    }
 
-        queryBuilder.append(" FROM `bigquery-public-data.google_trends.top_terms`");
+    private StringBuilder selectBuiderGrouped(QueryParameters parameters, StringBuilder queryBuilder) {
+        queryBuilder.append("SELECT ");
+        List<String> groupedFields = parameters.getGroupedFields();
+        List<String> selectedFields = parameters.getSelectedFields();
+
+        List<String> fieldsWithAnyValue = new ArrayList<>();
+        selectedFields.forEach(field -> {
+            if (!groupedFields.contains(field)) {
+                fieldsWithAnyValue.add("ANY_VALUE(" + field + ") AS " + field);
+            } else {
+                fieldsWithAnyValue.add(field);
+            }
+        });
+
+        return queryBuilder.append(String.join(", ", fieldsWithAnyValue));
+    }
+
+    private String whereFiltersBuilder(QueryParameters parameters) {
+        StringBuilder queryBuilder = new StringBuilder();
 
         if (!parameters.getFilters().isEmpty()) {
             queryBuilder.append(" WHERE ");
+
             List<String> filterConditions = new ArrayList<>();
             parameters.getFilters().forEach((key, filterUnit) -> {
                 String condition;
-                System.out.println(filterUnit.getIsInt());
+
                 if (filterUnit.getIsInt().equals("true")) {
                     condition = filterUnit.getField() + " " +
                             filterUnit.getOperator() + " " +
@@ -89,10 +125,13 @@ public class BigQueryServiceImpl implements BigQueryService {
             });
 
             if (!filterConditions.isEmpty()) {
+
                 if (!parameters.getSelectedOperators().isEmpty()) {
                     StringBuilder groupedConditions = new StringBuilder();
+
                     for (String condition : filterConditions) {
                         groupedConditions.append(condition);
+
                         if (!parameters.getSelectedOperators().isEmpty()) {
                             groupedConditions.append(" ").append(parameters.getSelectedOperators().poll()).append(" ");
                         }
@@ -103,11 +142,31 @@ public class BigQueryServiceImpl implements BigQueryService {
                 }
             }
         }
+        return queryBuilder.toString();
+    }
+
+    private String groupByBuilder(QueryParameters parameters) {
+        StringBuilder queryBuilder = new StringBuilder();
+        if (!parameters.getGroupedFields().isEmpty()) {
+            queryBuilder.append(" GROUP BY ")
+                    .append(String.join(", ", parameters.getGroupedFields()));
+        }
+        return queryBuilder.toString();
+    }
+
+    private String orderByBuilder(QueryParameters parameters) {
+        StringBuilder queryBuilder = new StringBuilder();
 
         if (parameters.getSortField() != null) {
             queryBuilder.append(" ORDER BY ")
                     .append(parameters.getSortField()).append(" ").append(parameters.getSortDirection());
         }
+
+        return queryBuilder.toString();
+    }
+
+    private String limitBuilder(QueryParameters parameters) {
+        StringBuilder queryBuilder = new StringBuilder();
 
         queryBuilder.append(" LIMIT ").append(parameters.getLimit());
         String query = queryBuilder.toString();

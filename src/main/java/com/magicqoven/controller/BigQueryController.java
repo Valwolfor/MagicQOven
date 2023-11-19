@@ -23,7 +23,7 @@ public class BigQueryController {
 
     @GetMapping("/query")
     public String executeQuery() throws InterruptedException {
-        String sqlQuery = "SELECT dma_id, dma_name, term, week, score, rank, refresh_date FROM `bigquery-public-data.google_trends.top_terms` WHERE score IS NOT NULL LIMIT 10";
+        String sqlQuery = "SELECT dma_id, dma_name, term, week, score, rank, refresh_date FROM  `bigquery-public-data.google_trends.top_terms` WHERE score IS NOT NULL LIMIT 10";
         return service.executeQuery(sqlQuery);
     }
 

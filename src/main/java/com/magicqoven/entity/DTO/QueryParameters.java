@@ -12,7 +12,16 @@ public class QueryParameters {
     private String sortField;
     private Sort.Direction sortDirection;
     private Queue<String> selectedOperators;
+    private List<String> groupedFields;
     private Integer limit;
+
+    public List<String> getGroupedFields() {
+        return groupedFields;
+    }
+
+    public void setGroupedFields(List<String> groupedFields) {
+        this.groupedFields = groupedFields;
+    }
 
     public Map<String, FilterUnit>  getFilters() {
         return filters;
