@@ -5,32 +5,26 @@ import com.google.cloud.spring.bigquery.core.BigQueryTemplate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.magicqoven.config.BigQueryFileGateway;
 import com.magicqoven.entity.DTO.QueryParameters;
 import com.magicqoven.service.inter.BigQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Queue;
 
 @Service
 public class BigQueryServiceImpl implements BigQueryService {
 
 
-    private final BigQueryFileGateway bigQueryFileGateway;
     private final BigQueryTemplate bigQueryTemplate;
     private final BigQuery bigQuery;
     private final String datasetName;
 
     @Autowired
-    public BigQueryServiceImpl(BigQueryFileGateway bigQueryFileGateway,
+    public BigQueryServiceImpl(
                                BigQueryTemplate bigQueryTemplate, BigQuery bigQuery, @Value("${spring.cloud.gcp.credentials.location}") String name) {
-        this.bigQueryFileGateway = bigQueryFileGateway;
         this.bigQueryTemplate = bigQueryTemplate;
         this.datasetName = name;
         this.bigQuery = bigQuery;
@@ -142,6 +136,7 @@ public class BigQueryServiceImpl implements BigQueryService {
                 }
             }
         }
+        System.out.println(queryBuilder.toString());
         return queryBuilder.toString();
     }
 
@@ -170,7 +165,7 @@ public class BigQueryServiceImpl implements BigQueryService {
 
         queryBuilder.append(" LIMIT ").append(parameters.getLimit());
         String query = queryBuilder.toString();
-        System.out.println(query);
+
         return query;
     }
 

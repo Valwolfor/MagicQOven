@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/bigquery")
+@CrossOrigin(origins = "http://localhost:3000")
 public class BigQueryController {
 
     private final BigQueryServiceImpl service;
