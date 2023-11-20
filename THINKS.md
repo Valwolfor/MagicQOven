@@ -33,3 +33,6 @@ Importante considerar lo del set internacional. Avanzamos con el query builder, 
 ahora a finiqutarlo!!! Jajaja se me olvido colocar el 19.
 Jumm nuevo problema, los enlaces y la gestión eso es mucho trabajo y no lo tengo. Tendré que haerlo muy flojo. Medio
 complejo eso paso de rutas, pero ya
+
+11/20 : No he dormido, ojalá lo hubiera hecho con type. Que cantidad de errores :8. Esto esta muy duro, nisiquiera pude 
+hacer lo de la magia.

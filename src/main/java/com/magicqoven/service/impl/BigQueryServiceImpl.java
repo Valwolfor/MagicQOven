@@ -24,7 +24,7 @@ public class BigQueryServiceImpl implements BigQueryService {
 
     @Autowired
     public BigQueryServiceImpl(
-                               BigQueryTemplate bigQueryTemplate, BigQuery bigQuery, @Value("${spring.cloud.gcp.credentials.location}") String name) {
+            BigQueryTemplate bigQueryTemplate, BigQuery bigQuery, @Value("${spring.cloud.gcp.credentials.location}") String name) {
         this.bigQueryTemplate = bigQueryTemplate;
         this.datasetName = name;
         this.bigQuery = bigQuery;
@@ -100,7 +100,7 @@ public class BigQueryServiceImpl implements BigQueryService {
         StringBuilder queryBuilder = new StringBuilder();
 
         if (!parameters.getFilters().isEmpty()) {
-            queryBuilder.append(" WHERE ");
+
 
             List<String> filterConditions = new ArrayList<>();
             parameters.getFilters().forEach((key, filterUnit) -> {
@@ -119,7 +119,9 @@ public class BigQueryServiceImpl implements BigQueryService {
                 filterConditions.add(condition);
             });
 
+
             if (!filterConditions.isEmpty()) {
+                queryBuilder.append(" WHERE ");
 
                 if (!parameters.getSelectedOperators().isEmpty()) {
                     StringBuilder groupedConditions = new StringBuilder();
@@ -128,12 +130,14 @@ public class BigQueryServiceImpl implements BigQueryService {
                         groupedConditions.append(condition);
 
                         if (!parameters.getSelectedOperators().isEmpty()) {
+
                             groupedConditions.append(" ").append(parameters.getSelectedOperators().poll()).append(" ");
                         }
                     }
                     queryBuilder.append(" ").append(groupedConditions);
+
                 } else {
-                    queryBuilder.append(" ").append(String.join(" AND ", filterConditions));
+                    queryBuilder.append(" ").append(filterConditions.get(0));
                 }
             }
         }

@@ -7,10 +7,10 @@ import SortOptions from "./SortOptions";
 
 const QueryBuilder = () => {
     const [selectedFields, setSelectedFields] = useState([]);
-    const [filters, setFilters] = useState([]);
+    const [filters, setFilters] = useState({});
     const [sortField, setSortField] = useState('');
     const [sortDirection, setSortDirection] = useState('ASC');
-    const [selectedOperators] = useState([]);
+    const [selectedOperators, setSelectedOperators] = useState([]);
     const [groupedFields] = useState([]);
     const [limit, setLimit] = useState(100);
 
@@ -61,9 +61,9 @@ const QueryBuilder = () => {
 
     return (
         <div>
-            {/* Aquí colocarías los componentes para seleccionar campos, establecer filtros, ordenar, etc. */}
             <FieldSelector setSelectedFields={setSelectedFields} selectedFields={selectedFields}/>
-            <FiltersBuilder setFilters={setFilters} filters={filters}/>
+            <FiltersBuilder setFilters={setFilters} filters={filters}
+                            setSelectedOperators={setSelectedOperators} selectedOperators={selectedOperators}/>
             <SortOptions setSortField={setSortField} setSortDirection={setSortDirection}
                          selectedFields={selectedFields}/>
             <LimitSelector setLimit={setLimit} limit={limit}/>
