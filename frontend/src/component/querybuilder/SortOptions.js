@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const SortOptions = ({ setSortField, setSortDirection, selectedFields }) => {
+const SortOptions = ({setSortField, setSortDirection, selectedFields}) => {
+
+    const [selectedField, setSelectedField] = useState("score");
+    const [isButtonEnabled, setIsButtonEnabled] = useState(false);
     const handleFieldChange = (e) => {
-        setSortField(e.target.value);
+        const selectedValue = e.target.value;
+        setSelectedField(selectedValue);
+        setSortField(selectedValue);
+
+        setIsButtonEnabled(selectedValue !== "Select Field");
     };
 
     const handleDirectionChange = (e) => {
@@ -14,8 +21,8 @@ const SortOptions = ({ setSortField, setSortDirection, selectedFields }) => {
             <h3>Sort Options</h3>
             <label>
                 Select Field:
-                <select onChange={handleFieldChange}>
-                    <option value="">Select Field</option>
+                <select onChange={handleFieldChange} value={selectedField}>
+                    <option value="score">Select Field</option>
                     {selectedFields.map((field) => (
                         <option key={field} value={field}>
                             {field}

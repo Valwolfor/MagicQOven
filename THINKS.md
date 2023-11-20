@@ -36,3 +36,5 @@ complejo eso paso de rutas, pero ya
 
 11/20 : No he dormido, ojalá lo hubiera hecho con type. Que cantidad de errores :8. Esto esta muy duro, nisiquiera pude 
 hacer lo de la magia.
+Jajaja el día del psicólogo y la paso sufriendo por vainas de sistemas. Jajaja.. Tener que correr tanto no me ha dejado disfrutarlo
+tanto como hubiera querido, más bien lo he medio sufrido. jajaja.

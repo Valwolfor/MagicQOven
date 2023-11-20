@@ -11,7 +11,8 @@ const FilterBuilder = ({setFilters, filters, setSelectedOperators, selectedOpera
     const [showLogicalOperatorButton, setShowLogicalOperatorButton] = useState(false);
     const [showLogicalOperator, setShowLogicalOperator] = useState(false);
     const [enableFilterCreation, setEnableFilterCreation] = useState(true);
-    const [showSaveButton, setShowSaveButton] = useState(true);
+    const [showSaveButton, setShowSaveButton] = useState(false);
+    const [numericWarning, setNumericWarning] = useState(false);
 
 
     const availableFields = ["dma_id", "dma_name", "term", "week", "score", "rank", "refresh_date"];
@@ -32,19 +33,24 @@ const FilterBuilder = ({setFilters, filters, setSelectedOperators, selectedOpera
     };
 
     const handleAddFilter = () => {
-        const key = Object.keys(filters).length + 1;
-        const newFilter = {...currentFilter};
-        setFilters({...filters, [key]: newFilter});
-        setCurrentFilter({
-            field: '',
-            operator: '',
-            isInt: false,
-            operant: ''
-        });
+        if ((currentFilter.field === "score" || currentFilter.field === "rank" || currentFilter.field === "dma_id") && isNaN(currentFilter.operant)) {
+            setNumericWarning(true);
 
-        setShowLogicalOperatorButton(true);
-        setEnableFilterCreation(false);
-        setShowSaveButton(true);
+        } else {
+            const key = Object.keys(filters).length + 1;
+            const newFilter = {...currentFilter};
+            setFilters({...filters, [key]: newFilter});
+            setCurrentFilter({
+                field: '',
+                operator: '',
+                isInt: false,
+                operant: ''
+            });
+
+            setShowLogicalOperatorButton(true);
+            setEnableFilterCreation(false);
+            setShowSaveButton(true);
+        }
     };
 
     const handleSaveFilters = () => {
@@ -102,8 +108,9 @@ const FilterBuilder = ({setFilters, filters, setSelectedOperators, selectedOpera
                     onChange={handleOperantChange}
                     disabled={!currentFilter.operator || !enableFilterCreation}
                 />
+                {numericWarning && <p>Operant should be a number for the selected field.</p>}
                 <button onClick={handleAddFilter}
-                        disabled={!currentFilter.operant || !currentFilter.operator || !currentFilter.field || !showSaveButton}>
+                        disabled={!currentFilter.operant || !currentFilter.operator || !currentFilter.field }>
                     Add Filter
                 </button>
 

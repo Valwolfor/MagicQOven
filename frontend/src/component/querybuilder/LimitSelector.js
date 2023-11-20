@@ -4,7 +4,7 @@ import '../../css/LimitSelector.css'; // Archivo de estilos CSS
 const LimitSelector = ({ setLimit, limit }) => {
     // Límite mínimo y máximo permitido
     const minLimit = 1;
-    const maxLimit = 1000;
+    const maxLimit = 10000;
 
     // Estado para manejar el mensaje de error
     const [error, setError] = useState('');
