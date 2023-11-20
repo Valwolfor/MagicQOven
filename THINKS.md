@@ -25,8 +25,11 @@ ME acabo de dar cuenta que estaba haciendo algo innecesario.
 11/17 : Bueno, a darle que estoy quedado y la gripa no baja. No podido resolver lo de TableResult, será necesario las key?
 no sé.
 
-11/18 : ya ni sé que pensar, parece que no alcanzaré. Pero bueno vamos darle.
+11/18-19 : ya ni sé que pensar, parece que no alcanzaré. Pero bueno vamos darle.
 Por fin un avance con los gráficos, pero no convence como se visualiza. No estoy agrupando bien las variables pues no es claro
 que hay. Se podría mejoarar el gráficoinear con la agrupación, pero me tomará mucho tiempo que no tengo. TODO: para mejorar.
 Bueno quedaron bellos, lastima el cloudwords, tal vez se podría ordernar por más.
-Importante considerar lo del set internacional. Avanzamos con el query builder, tarde pero da luz. 
+Importante considerar lo del set internacional. Avanzamos con el query builder, tarde pero da luz. Funcion el query builder, 
+ahora a finiqutarlo!!! Jajaja se me olvido colocar el 19.
+Jumm nuevo problema, los enlaces y la gestión eso es mucho trabajo y no lo tengo. Tendré que haerlo muy flojo. Medio
+complejo eso paso de rutas, pero ya

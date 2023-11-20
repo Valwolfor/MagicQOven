@@ -50,10 +50,10 @@ public class BigQueryServiceImpl implements BigQueryService {
     public String findTopTermsDynamically(QueryParameters parameters)
             throws InterruptedException {
         String query = buildQuery(parameters);
+        System.out.println(query); //TODO: eliminarlo.
         QueryJobConfiguration queryConfig = QueryJobConfiguration.newBuilder(query).build();
 
         TableResult result = bigQuery.query(queryConfig);
-        System.out.println(query);
         return parseTableResultToJson(result);
     }
 
@@ -179,7 +179,7 @@ public class BigQueryServiceImpl implements BigQueryService {
             for (int i = 0; i < fieldValues.size(); i++) {
                 Field fieldName = fields.get(i);
                 FieldValue fieldValue = fieldValues.get(i);
-                String value = fieldValue.getValue().toString();
+                String value = (fieldValue.getValue() != null) ? fieldValue.getValue().toString() : null;
                 jsonObject.addProperty(fieldName.getName(), value);
             }
             jsonList.add(jsonObject);

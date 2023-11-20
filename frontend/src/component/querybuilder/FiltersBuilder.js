@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
-const FilterBuilder = ({ setFilters, filters }) => {
-    // State to manage the current filter being constructed
+const FilterBuilder = ({ setFilters }) => {
     const [currentFilter, setCurrentFilter] = useState({
         field: '',
         operator: '',
@@ -9,32 +8,32 @@ const FilterBuilder = ({ setFilters, filters }) => {
         operant: ''
     });
 
-    // Available fields and operators for the filter
+    const [selectedOperators, setSelectedOperators] = useState([]);
+
+    const [displayedFilters, setDisplayedFilters] = useState({});
+
     const availableFields = ["dma_id", "dma_name", "term", "week", "score", "rank", "refresh_date"];
     const availableOperators = ["=", "<", ">", "LIKE"];
 
-    // Handles the change when selecting a field for the filter
     const handleFieldChange = (e) => {
         const field = e.target.value;
-        // Determine if the selected field requires an integer (true for dma_id, score, rank)
         const isInt = ["dma_id", "score", "rank"].includes(field);
-        // Update the current filter state with the selected field and its integer requirement
         setCurrentFilter({ ...currentFilter, field, isInt });
     };
 
-    // Handles the change when selecting an operator for the filter
     const handleOperatorChange = (e) => {
         setCurrentFilter({ ...currentFilter, operator: e.target.value });
     };
 
-    // Handles the change when entering the operant for the filter
     const handleOperantChange = (e) => {
         setCurrentFilter({ ...currentFilter, operant: e.target.value });
     };
 
-    // Adds the current filter to the list of filters and resets the current filter state
     const handleAddFilter = () => {
-        setFilters([...filters, currentFilter]);
+        const key = Object.keys(displayedFilters).length + 1;
+        const newFilters = { ...displayedFilters, [key]: currentFilter };
+        setFilters(newFilters);
+        setDisplayedFilters(newFilters);
         setCurrentFilter({
             field: '',
             operator: '',
@@ -43,36 +42,70 @@ const FilterBuilder = ({ setFilters, filters }) => {
         });
     };
 
+    const handleLogicalOperatorChange = (index, value) => {
+
+        const updatedOperators = [...selectedOperators];
+        delete updatedOperators[0]
+        updatedOperators[index] = value;
+        setSelectedOperators(updatedOperators);
+    };
+
+    const removeFilter = (key) => {
+        const updatedFilters = { ...displayedFilters };
+        delete updatedFilters[key];
+        setDisplayedFilters(updatedFilters);
+        setFilters(updatedFilters);
+    };
+
     return (
         <div>
-            <h3>Filter Builder</h3>
-            {/* Dropdown to select the field for the filter */}
-            <select value={currentFilter.field} onChange={handleFieldChange}>
-                <option value="">Select Field</option>
-                {availableFields.map((field) => (
-                    <option key={field} value={field}>{field}</option>
-                ))}
-            </select>
-            {/* Dropdown to select the operator for the filter */}
-            <select value={currentFilter.operator} onChange={handleOperatorChange} disabled={!currentFilter.field}>
-                <option value="">Select Operator</option>
-                {availableOperators.map((operator) => (
-                    <option key={operator} value={operator}>{operator}</option>
-                ))}
-            </select>
-            {/* Input field to enter the operant for the filter */}
-            <input
-                type="text"
-                value={currentFilter.operant}
-                onChange={handleOperantChange}
-                disabled={!currentFilter.operator}
-            />
-            {/* Button to add the current filter */}
-            <button onClick={handleAddFilter} disabled={!currentFilter.operant}>
-                Add Filter
-            </button>
+            <div>
+                <h3>Filter Builder</h3>
+                <select value={currentFilter.field} onChange={handleFieldChange}>
+                    <option value="">Select Field</option>
+                    {availableFields.map((field) => (
+                        <option key={field} value={field}>{field}</option>
+                    ))}
+                </select>
+                <select value={currentFilter.operator} onChange={handleOperatorChange} disabled={!currentFilter.field}>
+                    <option value="">Select Operator</option>
+                    {availableOperators.map((operator) => (
+                        <option key={operator} value={operator}>{operator}</option>
+                    ))}
+                </select>
+                <input
+                    type="text"
+                    value={currentFilter.operant}
+                    onChange={handleOperantChange}
+                    disabled={!currentFilter.operator}
+                />
+                <button onClick={handleAddFilter} disabled={!currentFilter.operant || !currentFilter.operator || !currentFilter.field}>
+                    Add Filter
+                </button>
+
+                <div>
+                    {Object.entries(displayedFilters).map(([index, filter]) => (
+                        <div key={index}>
+                            {parseInt(index) && displayedFilters[index - 1] && `${selectedOperators[index - 1]} `}
+                            {`${filter.field} ${filter.operator} ${filter.operant}`}{' '}
+                            <label>Select the logic operator of the next filter: </label>
+                            <select
+                                value={selectedOperators[index]}
+                                onChange={(e) =>
+                                    handleLogicalOperatorChange(index, e.target.value)}
+                            >
+                                <option value="AND">AND</option>
+                                <option value="OR">OR</option>
+                            </select>
+                            <button onClick={() => removeFilter(index)}> X </button>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };
 
 export default FilterBuilder;
+
+
