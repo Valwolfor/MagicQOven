@@ -26,7 +26,7 @@ const DoughnutChart = ({ data }) => {
                 labels: labels,
                 datasets: [
                     {
-                        label: 'Score',
+                        label: labels,
                         data: values,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.6)',
@@ -42,9 +42,10 @@ const DoughnutChart = ({ data }) => {
             },
             options: {
                 plugins: {
+                    legend: false,
                     title: {
                         display: true,
-                        text: 'Doughnut Chart of Top 20 Terms',
+                        text: 'Doughnut Chart of Top Terms',
                     },
                 },
             },

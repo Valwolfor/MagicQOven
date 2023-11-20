@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import BarChart from './BarChart';
-import LineChart from "./LineChart";
-import DoughnutChart from "./DoughnutChart";
-import DoughnutTermsChart from "./DoughnutTermsChart";
+import BarChart from './charts/BarChart';
+import LineChart from "./charts/LineChart";
+import DoughnutChart from "./charts/DoughnutChart";
+import DoughnutTermsChart from "./charts/DoughnutTermsChart";
+import QueryBuilder from "./querybuilder/QueryBuilder";
 
 
 const Dashboard = () => {
@@ -53,13 +54,12 @@ const Dashboard = () => {
             }
 
             const data = await response.json();
-            // Aquí puedes trabajar con los datos que has recibido
-            console.log(data);
+
             // Luego, puedes establecer el estado del componente con estos datos o usarlos de alguna otra manera
             // processData(data); // Función para manejar los datos
             setChartData(data);
             setDataFetched(true);
-            console.log('Data fetched status:', dataFetched);// Marca que los datos se han recuperado
+
         } catch (error) {
             console.error('There has been a problem with your fetch operation:', error);
             // Manejar el error, mostrar un mensaje al usuario, etc.
@@ -69,19 +69,51 @@ const Dashboard = () => {
     useEffect(() => {
         setDataFetched(true);
         fetchData();
-        console.log('Data fetched status:', dataFetched);
     }, []);
 
     return (
         <div>
             <h1>Dashboard</h1>
             <div>
-
+                <QueryBuilder  />
             </div>
-            {chartData.length > 0 && <BarChart data={chartData}/>}
-            {chartData.length > 0 && <LineChart data={chartData}/>}
-            {chartData.length > 0 && <DoughnutChart data={chartData}/>}
-            {chartData.length > 0 && <DoughnutTermsChart data={chartData}/>}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {chartData.length > 0 && (
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+
+                        <div style={{ width: '48%' }}>
+                            <BarChart data={chartData} />
+                        </div>
+                        <div style={{ width: '48%' }}>
+                            <LineChart data={chartData} />
+                        </div>
+                    </div>
+                )}
+                {chartData.length > 0 && (
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+
+                        <div style={{ width: '48%' }}>
+                            <DoughnutChart data={chartData} />
+                        </div>
+                        <div style={{ width: '48%' }}>
+                            <DoughnutTermsChart data={chartData} />
+                        </div>
+                    </div>
+                )}
+                {/* Insert here the next charts*/}
+            </div>
         </div>
     );
 };

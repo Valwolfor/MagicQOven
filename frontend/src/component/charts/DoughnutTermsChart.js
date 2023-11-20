@@ -10,7 +10,6 @@ const DoughnutTermsChart = ({ data }) => {
 
         const ctx = chartRef.current.getContext('2d');
 
-        // Contar las ocurrencias de cada término (term)
         const termCounts = {};
         data.forEach(item => {
             if (!termCounts[item.term]) {
@@ -41,7 +40,6 @@ const DoughnutTermsChart = ({ data }) => {
                             'rgba(255, 206, 86, 0.6)',
                             'rgba(75, 192, 192, 0.6)',
                             'rgba(153, 102, 255, 0.6)',
-                            // More colors if needed
                         ],
                         borderWidth: 1,
                     },
