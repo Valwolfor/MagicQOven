@@ -4,6 +4,7 @@ import FiltersBuilder from "./FiltersBuilder";
 import FieldSelector from "./FieldSelector";
 import SortOptions from "./SortOptions";
 import Dashboard from "../../pages/Dashboard";
+import GroupBySelector from "./GroupBySelector";
 
 
 const QueryBuilder = () => {
@@ -12,7 +13,7 @@ const QueryBuilder = () => {
     const [sortField, setSortField] = useState('');
     const [sortDirection, setSortDirection] = useState('ASC');
     const [selectedOperators, setSelectedOperators] = useState([]);
-    const [groupedFields, setGroupedFields] = useState([]);
+    const [onGroupBy, setGroupBy] = useState([]);
     const [limit, setLimit] = useState(100);
     const [chartData, setChartData] = useState([]);
 
@@ -23,7 +24,7 @@ const QueryBuilder = () => {
             sortField: sortField,
             sortDirection: sortDirection,
             selectedOperators: selectedOperators,
-            groupedFields: groupedFields,
+            groupedFields: onGroupBy,
             limit: limit,
         };
         return queryParameters;
@@ -83,6 +84,7 @@ const QueryBuilder = () => {
             <FieldSelector setSelectedFields={setSelectedFields} selectedFields={selectedFields}/>
             <FiltersBuilder setFilters={setFilters} filters={filters}
                             setSelectedOperators={setSelectedOperators} selectedOperators={selectedOperators}/>
+            <GroupBySelector setGroupBy={setGroupBy} onGroupBy={onGroupBy}/>
             <SortOptions setSortField={setSortField} setSortDirection={setSortDirection}
                          selectedFields={selectedFields}/>
             <LimitSelector setLimit={setLimit} limit={limit}/>
@@ -92,7 +94,7 @@ const QueryBuilder = () => {
             </div>
             <div>
                 {chartData.length === 0 ? (
-                    <p>The data retrieved is empty or the query     </p>
+                    <p>The data retrieved is empty or the spells are charging </p>
                 ) : (
                     <Dashboard chartData={chartData}></Dashboard>
                 )}
