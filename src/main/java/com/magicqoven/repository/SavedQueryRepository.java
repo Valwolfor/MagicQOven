@@ -10,4 +10,5 @@ public interface SavedQueryRepository extends JpaRepository<SavedQueryBuilt, Lon
     List<SavedQueryBuilt> findByUser(User user);
 
     List<SavedQueryBuilt> findByName(String name);
+
 }
