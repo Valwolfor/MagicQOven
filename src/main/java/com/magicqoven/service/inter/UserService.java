@@ -1,5 +1,6 @@
 package com.magicqoven.service.inter;
 
+import com.magicqoven.entity.SuperUser;
 import com.magicqoven.entity.User;
 import com.magicqoven.entity.util.UserRole;
 
@@ -12,6 +13,7 @@ public interface UserService {
     List<User> getUsers();
     List<User> getUsersByRole(UserRole role);
     User saveUser(User user);
-    User setUserAdmin(User user, UserRole role);
+    SuperUser saveSuperUser(SuperUser superUser);
+    SuperUser promoteToSuperUser(User user, String password, String username);
     void deleteUser(User user);
 }

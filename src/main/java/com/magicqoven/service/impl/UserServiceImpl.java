@@ -1,10 +1,11 @@
 package com.magicqoven.service.impl;
 
+import com.magicqoven.entity.SuperUser;
 import com.magicqoven.entity.User;
 import com.magicqoven.entity.util.UserRole;
 import com.magicqoven.repository.UserRepository;
 import com.magicqoven.service.inter.UserService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,25 +27,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User setUserAdmin(User user, UserRole role) {
-        User old = userRepository.getReferenceById(user.getId());
-        if (role.compareTo(UserRole.ADMIN) == 0) {
-            old.setRole(role);
-            return userRepository.save(old);
-        }else {
-            throw new IllegalStateException("Userrole is not ADMIN " + user);
-        }
+    public SuperUser saveSuperUser(SuperUser superUser) {
+        return userRepository.save(superUser);
+    }
+
+    @Override
+    public SuperUser promoteToSuperUser(User user, String password, String username) {
+
+        SuperUser superUser = new SuperUser();
+        superUser.setEmail(user.getEmail());
+        superUser.setPassword(password);
+        superUser.setUsername(username);
+        superUser.setRole(UserRole.ADMIN);
+
+        return userRepository.save(superUser);
     }
 
     @Override
     public void deleteUser(User user) {
-
         userRepository.delete(user);
     }
 
     @Override
     public User getUserById(Long id) {
-        return userRepository.getReferenceById(id);
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override

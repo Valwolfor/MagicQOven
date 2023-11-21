@@ -39,3 +39,5 @@ hacer lo de la magia.
 Jajaja el día del psicólogo y la paso sufriendo por vainas de sistemas. Jajaja.. Tener que correr tanto no me ha dejado disfrutarlo
 tanto como hubiera querido, más bien lo he medio sufrido. jajaja.
 Listo dos, sería chévere un join con international.
+
+11/21 : el ulttimo chance, ayer me rendí pero aquí voy. No voy a poder con los test.
