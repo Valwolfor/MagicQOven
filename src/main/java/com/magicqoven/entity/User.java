@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "user")
 public @Data class User {
 
     @Id
@@ -20,11 +21,12 @@ public @Data class User {
     @Column(nullable = false, unique = true)
     private String username;
     private String password; // Only for admins
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<SavedQuery> savedQueries = new HashSet<>();
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Comment> comments = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<SavedQueryBuilt> savedQueries = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<CommentQuery> comments = new HashSet<>();
     public boolean isAdmin() {
         return UserRole.ADMIN.equals(this.role);
     }

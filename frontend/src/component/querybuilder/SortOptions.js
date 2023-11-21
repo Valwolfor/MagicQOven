@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import {useState} from "react";
 
-const SortOptions = ({setSortField, setSortDirection, selectedFields}) => {
+const SortOptions = ({ setSortField, setSortDirection, selectedFields }) => {
+    const [selectedField, setSelectedField] = useState("Select Field");
 
-    const [selectedField, setSelectedField] = useState("score");
-    const [isButtonEnabled, setIsButtonEnabled] = useState(false);
     const handleFieldChange = (e) => {
         const selectedValue = e.target.value;
         setSelectedField(selectedValue);
         setSortField(selectedValue);
 
-        setIsButtonEnabled(selectedValue !== "Select Field");
+        setSortDirection("");
     };
 
     const handleDirectionChange = (e) => {
@@ -22,7 +21,9 @@ const SortOptions = ({setSortField, setSortDirection, selectedFields}) => {
             <label>
                 Select Field:
                 <select onChange={handleFieldChange} value={selectedField}>
-                    <option value="score">Select Field</option>
+                    <option value="Select Field" disabled>
+                        Select Field
+                    </option>
                     {selectedFields.map((field) => (
                         <option key={field} value={field}>
                             {field}
@@ -32,7 +33,10 @@ const SortOptions = ({setSortField, setSortDirection, selectedFields}) => {
             </label>
             <label>
                 Select Direction:
-                <select onChange={handleDirectionChange}>
+                <select
+                    onChange={handleDirectionChange}
+                    disabled={selectedField === "Select Field"}
+                >
                     <option value="ASC">Ascending</option>
                     <option value="DESC">Descending</option>
                 </select>

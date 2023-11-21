@@ -38,4 +38,14 @@ public class FilterUnit {
     public void setOperant(String operant) {
         this.operant = operant;
     }
+
+    @Override
+    public String toString() {
+        return "FilterUnit{" +
+                "field='" + field + '\'' +
+                ", operator='" + operator + '\'' +
+                ", isInt='" + isInt + '\'' +
+                ", operant='" + operant + '\'' +
+                '}';
+    }
 }

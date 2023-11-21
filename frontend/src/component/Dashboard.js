@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import BarChart from '../component/charts/BarChart';
-import LineChart from "../component/charts/LineChart";
-import DoughnutChart from "../component/charts/DoughnutChart";
-import DoughnutTermsChart from "../component/charts/DoughnutTermsChart";
+import BarChart from './charts/BarChart';
+import LineChart from "./charts/LineChart";
+import DoughnutChart from "./charts/DoughnutChart";
+import DoughnutTermsChart from "./charts/DoughnutTermsChart";
 
 
 const Dashboard = ({chartData}) => {

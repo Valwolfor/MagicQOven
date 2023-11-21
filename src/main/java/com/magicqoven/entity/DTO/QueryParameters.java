@@ -70,4 +70,17 @@ public class QueryParameters {
     public void setLimit(Integer limit) {
         this.limit = limit;
     }
+
+    @Override
+    public String toString() {
+        return "QueryParameters{" +
+                "filters= {" + filters +
+                "}, selectedFields=" + selectedFields +
+                ", sortField='" + sortField + '\'' +
+                ", sortDirection=" + sortDirection +
+                ", selectedOperators=" + selectedOperators +
+                ", groupedFields=" + groupedFields +
+                ", limit=" + limit +
+                '}';
+    }
 }

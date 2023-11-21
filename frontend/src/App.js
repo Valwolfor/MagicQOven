@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import React from "react";
 import QueryBuilder from "./component/querybuilder/QueryBuilder";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./component/Dashboard";
 
 function App() {
     return (

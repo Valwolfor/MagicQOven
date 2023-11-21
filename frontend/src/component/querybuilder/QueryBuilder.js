@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import LimitSelector from "./LimitSelector";
 import FiltersBuilder from "./FiltersBuilder";
 import FieldSelector from "./FieldSelector";
 import SortOptions from "./SortOptions";
-import Dashboard from "../../pages/Dashboard";
+import Dashboard from "../Dashboard";
 import GroupBySelector from "./GroupBySelector";
 
 
@@ -16,6 +16,32 @@ const QueryBuilder = () => {
     const [onGroupBy, setGroupBy] = useState([]);
     const [limit, setLimit] = useState(100);
     const [chartData, setChartData] = useState([]);
+
+    useEffect(() => {
+        const savedQuery = JSON.parse(localStorage.getItem('savedQuery'));
+        if (savedQuery) {
+            setSelectedFields(savedQuery.selectedFields || []);
+            setFilters(savedQuery.filters || {});
+            setSortField(savedQuery.sortField || '');
+            setSortDirection(savedQuery.sortDirection || 'ASC');
+            setSelectedOperators(savedQuery.selectedOperators || []);
+            setGroupBy(savedQuery.onGroupBy || []);
+            setLimit(savedQuery.limit || 100);
+        }
+    }, []);
+
+    useEffect(() => {
+        const queryParameters = {
+            selectedFields,
+            filters,
+            sortField,
+            sortDirection,
+            selectedOperators,
+            onGroupBy,
+            limit,
+        };
+        localStorage.setItem('savedQuery', JSON.stringify(queryParameters));
+    }, [selectedFields, filters, sortField, sortDirection, selectedOperators, onGroupBy, limit]);
 
     const buildQueryParameters = () => {
         const queryParameters = {
@@ -31,9 +57,9 @@ const QueryBuilder = () => {
     };
     const handleQuerySubmit = async () => {
         const queryParameters = buildQueryParameters();
-        const username = 'witcher.valwolfor';
-        const password = 'abrakadabra777';
-        const basicAuth = 'Basic ' + btoa(username + ':' + password);
+        // const username = 'witcher.valwolfor';
+        // const password = 'abrakadabra777';
+        // const basicAuth = 'Basic ' + btoa(username + ':' + password);
 
 
         const handleError = (error) => {
@@ -43,8 +69,8 @@ const QueryBuilder = () => {
         const response = await fetch('http://localhost:8085/bigquery/dynamic', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': basicAuth
+                'Content-Type': 'application/json'
+                // 'Authorization': basicAuth
             },
             body: JSON.stringify(queryParameters)
         })
@@ -52,11 +78,35 @@ const QueryBuilder = () => {
             .then(data => processData(data))
             .catch(error => handleError(error));
 
-
     };
 
     const processData = (data) => {
         setChartData(data);
+    };
+
+    useEffect(() => {
+        const queryParameters = {
+            filters,
+            selectedFields,
+            sortField,
+            sortDirection,
+            selectedOperators,
+            groupedFields: onGroupBy,
+            limit,
+        };
+        localStorage.setItem('savedQuery', JSON.stringify(queryParameters));
+    }, [selectedFields, filters, sortField, sortDirection, selectedOperators, onGroupBy, limit]);
+
+    const handleClearQuery = () => {
+        localStorage.removeItem('savedQuery');
+        setSelectedFields([]);
+        setFilters({});
+        setSortField('');
+        setSortDirection('ASC');
+        setSelectedOperators([]);
+        setGroupBy([]);
+        setLimit(100);
+        setChartData([]);
     };
 
     return (
@@ -78,7 +128,7 @@ const QueryBuilder = () => {
             </ul>
             <div>
                 <p>
-                    Now select the correct ingredients for make the powerfull <strong>Spells of Charts</strong>.
+                    Now select the correct ingredients for make the powerful <strong>Spells of Charts</strong>.
                 </p>
             </div>
             <FieldSelector setSelectedFields={setSelectedFields} selectedFields={selectedFields}/>
@@ -88,7 +138,10 @@ const QueryBuilder = () => {
             <SortOptions setSortField={setSortField} setSortDirection={setSortDirection}
                          selectedFields={selectedFields}/>
             <LimitSelector setLimit={setLimit} limit={limit}/>
-            <button onClick={handleQuerySubmit}>Send Query</button>
+            <div>
+                <button onClick={handleQuerySubmit}>Send Query</button>
+                <button onClick={handleClearQuery}>Clean Query</button>
+            </div>
             <div>
                 The magic born here!
             </div>
