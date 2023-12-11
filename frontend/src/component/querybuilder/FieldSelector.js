@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 
 const FieldSelector = ({ setSelectedFields, selectedFields }) => {
     const availableFields = ["dma_id", "dma_name", "week", "rank", "refresh_date"];
-    const defaultFields = ["score", "term"]; // Campos predeterminados seleccionados
+    const defaultFields = ["score", "term"]; // Default flieds
 
-    // Función para inicializar los campos predeterminados al montar el componente
     useEffect(() => {
         setSelectedFields((prevSelectedFields) => {
             const fieldsToAdd = defaultFields.filter((field) => !prevSelectedFields.includes(field));
@@ -16,13 +15,10 @@ const FieldSelector = ({ setSelectedFields, selectedFields }) => {
         const isDefaultField = defaultFields.includes(field);
 
         if (isDefaultField) {
-            // Si es un campo predeterminado, verificamos si ya está seleccionado
             if (!selectedFields.includes(field)) {
-                // Solo si no está seleccionado, lo agregamos
                 setSelectedFields([...selectedFields, field]);
             }
         } else {
-            // Para otros campos, realizamos la lógica de selección/deselección normal
             const updatedFields = selectedFields.includes(field)
                 ? selectedFields.filter((selected) => selected !== field)
                 : [...selectedFields, field];

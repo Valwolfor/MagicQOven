@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/comments")
+@CrossOrigin(origins = "http://localhost:3000")
 @Validated
 public class CommentController {
 

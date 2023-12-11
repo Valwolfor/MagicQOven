@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import LimitSelector from "./LimitSelector";
 import FiltersBuilder from "./FiltersBuilder";
 import FieldSelector from "./FieldSelector";
-import SortOptions from "./SortOptions";
 import Dashboard from "../Dashboard";
 import GroupBySelector from "./GroupBySelector";
 
@@ -23,7 +22,6 @@ const QueryBuilder = () => {
             setSelectedFields(savedQuery.selectedFields || []);
             setFilters(savedQuery.filters || {});
             setSortField(savedQuery.sortField || '');
-            setSortDirection(savedQuery.sortDirection || 'ASC');
             setSelectedOperators(savedQuery.selectedOperators || []);
             setGroupBy(savedQuery.onGroupBy || []);
             setLimit(savedQuery.limit || 100);
@@ -34,7 +32,6 @@ const QueryBuilder = () => {
         const queryParameters = {
             selectedFields,
             filters,
-            sortField,
             sortDirection,
             selectedOperators,
             onGroupBy,
@@ -48,7 +45,6 @@ const QueryBuilder = () => {
             filters: filters,
             selectedFields: selectedFields,
             sortField: sortField,
-            sortDirection: sortDirection,
             selectedOperators: selectedOperators,
             groupedFields: onGroupBy,
             limit: limit,
@@ -57,20 +53,21 @@ const QueryBuilder = () => {
     };
     const handleQuerySubmit = async () => {
         const queryParameters = buildQueryParameters();
-        // const username = 'witcher.valwolfor';
-        // const password = 'abrakadabra777';
-        // const basicAuth = 'Basic ' + btoa(username + ':' + password);
-
 
         const handleError = (error) => {
             console.error('Error retrieving the data:', error);
         };
 
+        const username = 'witcher.valwolfor';
+        const password = 'abrakadabra777';
+
+        const basicAuth = 'Basic ' + btoa(username + ':' + password);
+
         const response = await fetch('http://localhost:8085/bigquery/dynamic', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
-                // 'Authorization': basicAuth
+                'Content-Type': 'application/json',
+                'Authorization': basicAuth
             },
             body: JSON.stringify(queryParameters)
         })
@@ -135,8 +132,6 @@ const QueryBuilder = () => {
             <FiltersBuilder setFilters={setFilters} filters={filters}
                             setSelectedOperators={setSelectedOperators} selectedOperators={selectedOperators}/>
             <GroupBySelector setGroupBy={setGroupBy} onGroupBy={onGroupBy}/>
-            <SortOptions setSortField={setSortField} setSortDirection={setSortDirection}
-                         selectedFields={selectedFields}/>
             <LimitSelector setLimit={setLimit} limit={limit}/>
             <div>
                 <button onClick={handleQuerySubmit}>Send Query</button>

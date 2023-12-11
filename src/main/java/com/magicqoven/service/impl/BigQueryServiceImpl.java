@@ -66,14 +66,14 @@ public class BigQueryServiceImpl implements BigQueryService {
                     .append(" FROM `bigquery-public-data.google_trends.top_rising_terms`")
                     .append(whereFiltersBuilder(parameters))
                     .append(groupByBuilder(parameters))
-                    .append(orderByBuilder(parameters))
+//                    .append(orderByBuilder(parameters))
                     .append(limitBuilder(parameters)).toString();
         } else {
             queryBuilder.append("SELECT ");
             query = queryBuilder.append(String.join(", ", parameters.getSelectedFields()))
                     .append(" FROM `bigquery-public-data.google_trends.top_terms`")
                     .append(whereFiltersBuilder(parameters))
-                    .append(orderByBuilder(parameters))
+//                    .append(orderByBuilder(parameters))
                     .append(limitBuilder(parameters)).toString();
         }
         return query;

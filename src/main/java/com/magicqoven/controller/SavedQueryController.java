@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/saved-queries")
+@RequestMapping("/saved-queries")
+@CrossOrigin(origins = "http://localhost:3000")
 @Validated
 public class SavedQueryController {
 

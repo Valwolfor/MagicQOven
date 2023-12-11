@@ -40,4 +40,8 @@ Jajaja el día del psicólogo y la paso sufriendo por vainas de sistemas. Jajaja
 tanto como hubiera querido, más bien lo he medio sufrido. jajaja.
 Listo dos, sería chévere un join con international.
 
-11/21 : el ulttimo chance, ayer me rendí pero aquí voy. No voy a poder con los test.
+11/21 : el ulttimo chance, ayer me rendí pero aquí voy. No voy a poder con los test. Que dolor de cabeza eso de las transiciones de
+react
+Jajaja. esto implosiona, algo funciona y de repeente un bug inesperado de algo que ya funcionaba. Lo corregí y fallaron más jaja
+Bueno, ya esto se atrancó, toca enfriarse, pero no tengo tiempo. Fue bueno, será terminarlo luego. Toca dar muchas explicaciones
+ahorita :P
